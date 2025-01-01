@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lancer de Dé</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: url('assets/dinard.jpg'); /* Chemin vers l'image de fond */
+            background-size: cover; /* L'image couvre toute la page */
+            background-position: center center; /* Centrer l'image */
+            background-attachment: fixed; /* L'image ne défile pas */
+            color: #fff; /* Texte en blanc pour contraster avec l'arrière-plan */
+            padding: 20px;
+        }
+        #dice-image {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bienvenue sur le jeu de lancer de dé !</h1>
+
+    <!-- Formulaire pour entrer le prénom -->
+    <div id="name-form">
+        <label for="name">Entrez votre prénom : </label>
+        <input type="text" id="name" placeholder="Votre prénom" required>
+        <button id="submit-name">Soumettre</button>
+    </div>
+
+    <!-- Message personnalisé et image du dé -->
+    <div id="greeting" style="display:none;">
+        <h2 id="welcome-message"></h2>
+        <img id="dice-image" src="assets/dice-1.png" alt="Image du dé">
+        <br>
+        <button id="roll-button">Lancer le dé</button>
+    </div>
+
+    <script>
+        // Fonction pour afficher un message de bienvenue avec le prénom
+        document.getElementById('submit-name').onclick = function(event) {
+            event.preventDefault(); // Empêche la soumission du formulaire et la redirection
+
+            var name = document.getElementById('name').value;
+            if (name.trim() !== "") {
+                // Affiche le message de bienvenue
+                document.getElementById('welcome-message').innerText = "Bienvenue " + name + " ! Prêt à lancer le dé ?";
+                // Cache le formulaire et affiche l'image du dé et le bouton
+                document.getElementById('name-form').style.display = 'none';
+                document.getElementById('greeting').style.display = 'block';
+            } else {
+                alert("Veuillez entrer un prénom !");
+            }
+        };
+
+        // Fonction qui génère un nombre aléatoire entre 1 et 6 pour changer l'image du dé
+        function rollDice() {
+            var randomNumber = Math.floor(Math.random() * 6) + 1; // Génère un nombre entre 1 et 6
+            var diceImage = document.getElementById('dice-image');
+            diceImage.src = 'assets/dice-' + randomNumber + '.png'; // Met à jour l'image du dé
+        }
+
+        // Ajout de l'événement au bouton pour lancer le dé
+        document.getElementById('roll-button').onclick = rollDice;
+    </script>
+</body>
+</html>
