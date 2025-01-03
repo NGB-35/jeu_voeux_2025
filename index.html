@@ -3,23 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lancer de Dé</title>
+    <title>Fabriquons votre année 2025</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-image: url('assets/dinard.jpg'); /* Chemin vers l'image de fond */
-            background-size: cover; /* L'image couvre toute la page */
-            background-position: center center; /* Centrer l'image */
-            background-attachment: fixed; /* L'image ne défile pas */
-            color: #fff; /* Texte en blanc pour contraster avec l'arrière-plan */
-            padding: 20px;
+            padding-top: 50px;
+            color: white;
+            margin: 0;
+            background-color: #2C6B3F; /* Vert émeraude soutenu */
         }
-        #dice-image {
-            width: 150px;
-            height: 150px;
+
+        h1 {
+            font-size: 36px;
+            color: #fff;
+        }
+
+        /* Partie formulaire de prénom */
+        #name-form {
+            display: block;
             margin-bottom: 20px;
         }
+
+        #name-input {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            width: 200px;
+            border-radius: 5px;
+        }
+
         button {
             padding: 10px 20px;
             font-size: 18px;
@@ -29,61 +42,235 @@
             border: none;
             border-radius: 5px;
         }
-        button:hover {
-            background-color: #45a049;
+
+        /* Partie jeu du dé */
+        #dice-section {
+            display: none;
         }
-        input {
+
+        .card {
+            display: inline-block;
+            width: 120px;
+            height: 150px; /* Hauteur fixe de la carte */
+            border: 2px solid #000;
+            background-color: rgba(242, 242, 242, 0.8); /* Légère transparence pour mieux voir l'image de fond */
+            text-align: center;
             padding: 10px;
-            font-size: 16px;
-            width: 200px;
-            margin-bottom: 20px;
+            font-size: 24px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            margin: 10px;
         }
+
+        .card img {
+            width: 100%; /* Remplir toute la largeur de la carte */
+            height: 100%; /* Remplir toute la hauteur de la carte */
+            object-fit: cover; /* Pour garder l'image proportionnelle et qu'elle couvre toute la carte */
+        }
+
+        #dice-image {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            margin: 20px;
+        }
+
+        .quote {
+            font-style: italic;
+            color: white; /* Citations en blanc */
+            margin-top: 20px;
+        }
+
+        /* Style pour la photo de fin */
+        #photo-container {
+            margin-top: 30px;
+            text-align: center;
+            display: none; /* Masquée au départ */
+            border: 4px solid #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Ombre extérieure */
+            border-radius: 15px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffffff, #f0f0f0); /* Effet satin */
+        }
+
+        #photo-container img {
+            width: 80%; /* Taille agrandie de la photo */
+            height: auto;
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5); /* Effet oreiller */
+        }
+
+        /* Affichage du texte sous la photo */
+        #photo-text {
+            margin-top: 20px;
+            font-size: 20px;
+            font-style: italic;
+            color: #333;
+        }
+
+        /* Masquer "Année construite" si nécessaire */
+        #year-container {
+            display: none; /* Masquer le texte "Année construite" */
+        }
+
+        /* Style du texte de voeux */
+        #final-text {
+            margin-top: 30px;
+            font-size: 24px;
+            color: #fff;
+            font-style: italic;
+        }
+
+        /* Styles pour rendre la page responsive */
+        @media screen and (max-width: 768px) {
+            #name-input, button {
+                width: 90%;
+            }
+
+            .card {
+                width: 100px;
+                height: 130px;
+            }
+
+            #dice-image {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
     </style>
 </head>
 <body>
-    <h1>Bienvenue sur le jeu de lancer de dé !</h1>
+
+    <h1>Fabriquons votre année 2025</h1>
 
     <!-- Formulaire pour entrer le prénom -->
     <div id="name-form">
-        <label for="name">Entrez votre prénom : </label>
-        <input type="text" id="name" placeholder="Votre prénom" required>
-        <button id="submit-name">Soumettre</button>
+        <input type="text" id="name-input" placeholder="Entrez votre prénom" />
+        <button onclick="startGame()">Commencer</button>
     </div>
 
-    <!-- Message personnalisé et image du dé -->
-    <div id="greeting" style="display:none;">
-        <h2 id="welcome-message"></h2>
-        <img id="dice-image" src="assets/dice-1.png" alt="Image du dé">
-        <br>
-        <button id="roll-button">Lancer le dé</button>
+    <div id="user-welcome"></div>
+
+    <!-- Section pour le jeu du dé, cachée au départ -->
+    <div id="dice-section">
+        <p>Bonjour, <span id="user-name"></span> !</p>
+        <p>Cliquez sur le dé pour ajouter un chiffre à l'année !</p>
+
+        <img id="dice-image" src="assets/dice-1.png" alt="Lancer du dé" onclick="rollDice()">
+
+        <div id="cards-container"></div>
+
+        <!-- Texte affiché uniquement sur la page du dé -->
+        <div id="final-text">
+            <p>Nous espérons que 2025 sera une année pleine de bonheur, de succès et de prospérité pour vous et vos proches. Que le meilleur vous accompagne dans toutes vos réalisations !</p>
+        </div>
+    </div>
+
+    <!-- Ajout du lecteur audio -->
+    <audio id="audio-player" src="assets/ode_a_la_joie.mp3" preload="auto"></audio>
+
+    <!-- Photo et texte de vœux à la fin -->
+    <div id="photo-container">
+        <img src="assets/votre_photo.jpg" alt="Notre photo" />
+        <div id="photo-text">
+            <p>"La vie n'est pas d'attendre que les orages passent, c'est d'apprendre à danser sous la pluie." - Sénèque</p>
+        </div>
     </div>
 
     <script>
-        // Fonction pour afficher un message de bienvenue avec le prénom
-        document.getElementById('submit-name').onclick = function(event) {
-            event.preventDefault(); // Empêche la soumission du formulaire et la redirection
+        let currentYear = '';  // Variable pour accumuler les chiffres de l'année
+        let cardNumber = 0;    // Compteur pour les cartes
 
-            var name = document.getElementById('name').value;
-            if (name.trim() !== "") {
-                // Affiche le message de bienvenue
-                document.getElementById('welcome-message').innerText = "Bienvenue " + name + " ! Prêt à lancer le dé ?";
-                // Cache le formulaire et affiche l'image du dé et le bouton
-                document.getElementById('name-form').style.display = 'none';
-                document.getElementById('greeting').style.display = 'block';
-            } else {
+        // Citation à afficher avant et après l'année
+        const startQuote = "Chaque étape compte dans la construction de ton avenir.";
+        const endQuote = "Félicitations ! Tu as construit l'année 2025 !";
+
+        // Cartes de l'année 2025 avec les numéros du dé correspondants
+        const cards = [
+            "assets/card1.png", // 1 → card1.png (le 2)
+            "assets/card4.png", // 2 → card4.png (le 0)
+            "assets/card1.png", // 3 → card1.png (le 2)
+            "assets/card2.png", // 4 → card2.png (le 5)
+        ];
+
+        // Citation à afficher pour chaque carte
+        const quotes = [
+            "2025 est l'année du changement.",
+            "Chaque étape vous rapproche de vos rêves.",
+            "N'ayez jamais peur d'un nouveau départ.",
+            "L'année 2025 sera remplie de nouveaux horizons.",
+        ];
+
+        function startGame() {
+            // Récupère le prénom et l'affiche dans la section du jeu
+            const userName = document.getElementById('name-input').value;
+            if (userName.trim() === "") {
                 alert("Veuillez entrer un prénom !");
+                return;
             }
-        };
 
-        // Fonction qui génère un nombre aléatoire entre 1 et 6 pour changer l'image du dé
-        function rollDice() {
-            var randomNumber = Math.floor(Math.random() * 6) + 1; // Génère un nombre entre 1 et 6
-            var diceImage = document.getElementById('dice-image');
-            diceImage.src = 'assets/dice-' + randomNumber + '.png'; // Met à jour l'image du dé
+            // Cache la section du formulaire et affiche la section du jeu
+            document.getElementById('name-form').style.display = 'none';
+            document.getElementById('dice-section').style.display = 'block';
+            document.getElementById('user-name').innerText = userName;
+
+            // Affiche le texte de bienvenue avec la phrase modifiée
+            document.getElementById('user-welcome').innerHTML = `<p>Bonjour ${userName} !</p>`;
+
+            // Affiche la citation de début
+            document.getElementById('cards-container').innerHTML = `<p class="quote">${startQuote}</p>`;
+
+            // Retirer la phrase après 20 secondes
+            setTimeout(function() {
+                document.getElementById('final-text').style.display = 'none';
+            }, 20000); // 20 secondes
         }
 
-        // Ajout de l'événement au bouton pour lancer le dé
-        document.getElementById('roll-button').onclick = rollDice;
+        function rollDice() {
+            const diceRoll = Math.floor(Math.random() * 6) + 1; // Génère un nombre entre 1 et 6
+            const diceImage = document.getElementById('dice-image');
+            diceImage.src = `assets/dice-${diceRoll}.png`; // Met à jour l'image du dé
+
+            // Jouer le son de "ode à la joie"
+            const audioPlayer = document.getElementById('audio-player');
+            audioPlayer.play();
+
+            // Ajoute un chiffre à l'année
+            currentYear += diceRoll;
+
+            // Affiche la carte correspondante au chiffre
+            displayCard(diceRoll);
+        }
+
+        function displayCard(digit) {
+            if (cardNumber < 4) { // Limite à 4 cartes pour construire 2025
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.innerHTML = `<img src="${cards[cardNumber]}" alt="Carte">`;
+
+                // Affiche la citation correspondante sous la carte
+                const quoteDiv = document.createElement('div');
+                quoteDiv.classList.add('quote');
+                quoteDiv.innerHTML = quotes[cardNumber];  // Choisit une citation pour cette carte
+                card.appendChild(quoteDiv);
+
+                // Affiche la carte au conteneur
+                document.getElementById('cards-container').appendChild(card);
+
+                // Augmente le compteur de cartes
+                cardNumber++;
+            } else {
+                // Affiche la citation de fin une fois l'année 2025 complète
+                const endMessage = document.createElement('div');
+                endMessage.innerHTML = `<p class="quote">${endQuote}</p>`;
+                document.getElementById('cards-container').appendChild(endMessage);
+
+                // Affiche la photo et le texte de vœux
+                document.getElementById('photo-container').style.display = 'block';
+            }
+        }
     </script>
+
 </body>
 </html>
